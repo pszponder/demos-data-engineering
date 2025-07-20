@@ -21,6 +21,8 @@ stop:
 # Complete cleanup: stop services, remove volumes and images
 clean:
 	docker compose --profile flower down --volumes --rmi all
+	rm -rf logs/
+	@echo "🧹 Cleaned up Docker resources and logs"
 
 # Create a new Airflow user interactively
 user-create:

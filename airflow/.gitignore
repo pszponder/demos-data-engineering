@@ -4,9 +4,6 @@
 # Airflow logs
 logs/
 
-# Airflow local settings
-airflow.cfg
-
 # Python
 __pycache__/
 *.py[cod]
