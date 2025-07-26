@@ -1,0 +1,19 @@
+# MinIO specific
+.env.local
+.env.production
+
+# Docker
+.docker/
+
+# Logs
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
