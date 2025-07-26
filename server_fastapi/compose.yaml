@@ -1,0 +1,15 @@
+services:
+    fastapi-app:
+        container_name: fastapi-app
+        build:
+            context: .
+        restart: unless-stopped
+        init: true
+        ports:
+            - "${PORT:-8000}:${PORT:-8000}" # Use PORT from .env, fallback to 8000
+        env_file: ./.env # Load environment variables from .env file
+        # If you add a database or other services, add depends_on here
+        # networks: [app-net]  # Uncomment if you add more services/networks
+# No external services (databases, caches, etc.) detected in the project files or documentation.
+# No volumes section included, as there are no persistent data requirements.
+# No custom networks defined, as only a single service is present.
