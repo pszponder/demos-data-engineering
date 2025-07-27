@@ -1,0 +1,52 @@
+services:
+    spark-master:
+        image: bitnami/spark:latest
+        container_name: spark-master
+        environment:
+            - SPARK_MODE=master
+            - SPARK_RPC_AUTHENTICATION_ENABLED=no
+            - SPARK_RPC_ENCRYPTION_ENABLED=no
+            - SPARK_LOCAL_STORAGE_ENCRYPTION_ENABLED=no
+            - SPARK_SSL_ENABLED=no
+            - SPARK_USER=spark
+        ports:
+            - "${SPARK_MASTER_WEB_UI_PORT}:8080" # Spark Master Web UI
+            - "${SPARK_MASTER_PORT}:7077" # Spark Master Port
+        volumes:
+            - ./data:/opt/bitnami/spark/data
+            - ./apps:/opt/bitnami/spark/apps
+        networks:
+            - spark-network
+        # Uncomment if you need host networking for external connections
+        # extra_hosts:
+        #   - "host.docker.internal:${HOST_IP}"
+
+    spark-worker:
+        image: bitnami/spark:latest
+        container_name: spark-worker-1
+        environment:
+            - SPARK_MODE=worker
+            - SPARK_MASTER_URL=spark://spark-master:7077
+            - SPARK_WORKER_MEMORY=${SPARK_WORKER_MEMORY}
+            - SPARK_WORKER_CORES=${SPARK_WORKER_CORES}
+            - SPARK_RPC_AUTHENTICATION_ENABLED=no
+            - SPARK_RPC_ENCRYPTION_ENABLED=no
+            - SPARK_LOCAL_STORAGE_ENCRYPTION_ENABLED=no
+            - SPARK_SSL_ENABLED=no
+            - SPARK_USER=spark
+        ports:
+            - "${SPARK_WORKER_WEB_UI_PORT}:8081" # Worker 1 Web UI
+        volumes:
+            - ./data:/opt/bitnami/spark/data
+            - ./apps:/opt/bitnami/spark/apps
+        depends_on:
+            - spark-master
+        networks:
+            - spark-network
+        # Uncomment if you need host networking for external connections
+        # extra_hosts:
+        #   - "host.docker.internal:${HOST_IP}"
+
+networks:
+    spark-network:
+        driver: bridge
