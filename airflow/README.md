@@ -45,27 +45,16 @@ make start
 ```
 
 After starting, you can access:
+
 - **Airflow Web UI**: http://localhost:8080
 - **Flower Monitoring**: http://localhost:5555
-
-## 📋 Available Commands
-
-| Command | Description |
-|---------|-------------|
-| `make init` | Initialize Airflow database and create admin user |
-| `make start` | Start Airflow services including Flower monitoring |
-| `make stop` | Stop all Airflow services including Flower |
-| `make clean` | Complete cleanup: stop services, remove volumes and images |
-| `make user-create` | Create a new Airflow user interactively |
-| `make user-delete` | Delete an existing Airflow user |
-| `make user-list` | List all Airflow users |
-| `make help` | Show available commands |
 
 ## 👥 User Management
 
 ### Default Admin User
 
 The default admin user is created during initialization using credentials from your `.env` file:
+
 - Username: Set via `_AIRFLOW_WWW_USER_USERNAME`
 - Password: Set via `_AIRFLOW_WWW_USER_PASSWORD`
 
@@ -78,27 +67,30 @@ make user-create
 ```
 
 This will prompt you for:
+
 1. **Role selection**: Admin, User, Op, or Viewer
 2. **User details**: Username, first name, last name, email
 3. **Password**: Securely entered (hidden input)
 
 ### User Roles Explained
 
-| Role | Permissions |
-|------|-------------|
-| **Admin** | Full administrative access - can manage users, connections, configurations |
-| **User** | Can view and edit DAGs, tasks, connections |
-| **Op** | Can view DAGs and task instances, trigger DAG runs |
-| **Viewer** | Read-only access to DAGs and task instances |
+| Role       | Permissions                                                                |
+| ---------- | -------------------------------------------------------------------------- |
+| **Admin**  | Full administrative access - can manage users, connections, configurations |
+| **User**   | Can view and edit DAGs, tasks, connections                                 |
+| **Op**     | Can view DAGs and task instances, trigger DAG runs                         |
+| **Viewer** | Read-only access to DAGs and task instances                                |
 
 ### Managing Existing Users
 
 List all users:
+
 ```bash
 make user-list
 ```
 
 Delete a user:
+
 ```bash
 make user-delete
 ```
@@ -134,10 +126,11 @@ Key environment variables in `.env`:
 You can customize Airflow by:
 
 1. **Environment variables**: Add Airflow config variables to `.env`
-   ```bash
-   AIRFLOW__CORE__DAGS_ARE_PAUSED_AT_CREATION=false
-   AIRFLOW__WEBSERVER__EXPOSE_CONFIG=true
-   ```
+
+    ```bash
+    AIRFLOW__CORE__DAGS_ARE_PAUSED_AT_CREATION=false
+    AIRFLOW__WEBSERVER__EXPOSE_CONFIG=true
+    ```
 
 2. **Configuration file**: Place custom `airflow.cfg` in the `config/` directory
 
@@ -154,12 +147,14 @@ You can customize Airflow by:
 ### Installing Additional Packages
 
 **Option 1: Environment variable (for testing)**
+
 ```bash
 # Add to .env file
 _PIP_ADDITIONAL_REQUIREMENTS=pandas==1.5.0 requests==2.28.0
 ```
 
 **Option 2: Custom Docker image (recommended for production)**
+
 1. Create a `Dockerfile`
 2. Extend the official Airflow image
 3. Build and use your custom image
@@ -167,6 +162,7 @@ _PIP_ADDITIONAL_REQUIREMENTS=pandas==1.5.0 requests==2.28.0
 ### Accessing Logs
 
 Logs are stored in the `logs/` directory and can be viewed:
+
 - Through the Airflow Web UI
 - Directly in the filesystem
 - Using `docker compose logs [service-name]`
@@ -176,18 +172,22 @@ Logs are stored in the `logs/` directory and can be viewed:
 ### Common Issues
 
 **1. Permission Issues**
+
 - Make sure `AIRFLOW_UID` in `.env` matches your system user ID
 - Run: `echo $UID` to get your user ID
 
 **2. Services Won't Stop Properly**
+
 - Use `make clean` for complete cleanup
 - Check for running containers: `docker ps`
 
 **3. Database Connection Issues**
+
 - Ensure PostgreSQL service is healthy: `docker compose ps`
 - Check logs: `docker compose logs postgres`
 
 **4. Web UI Not Accessible**
+
 - Verify services are running: `docker compose ps`
 - Check port conflicts: `lsof -i :8080`
 
@@ -229,6 +229,7 @@ make start
 - [Docker Compose for Airflow](https://airflow.apache.org/docs/apache-airflow/stable/howto/docker-compose/index.html)
 - [Airflow Best Practices](https://airflow.apache.org/docs/apache-airflow/stable/best-practices.html)
 - [Writing DAGs](https://airflow.apache.org/docs/apache-airflow/stable/tutorial.html)
+- [Apache Airflow Task SDK](https://airflow.apache.org/docs/task-sdk/stable/index.html)
 
 ## 🤝 Contributing
 
