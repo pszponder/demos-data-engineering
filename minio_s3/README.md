@@ -38,23 +38,6 @@ After running `make up`, you'll have access to:
 
 Environment variables are stored in `.env`:
 
-```bash
-# MinIO ports
-MINIO_PORT=9000
-MINIO_CONSOLE_PORT=9001
-
-# Credentials
-MINIO_ROOT_USER=minioadmin
-MINIO_ROOT_PASSWORD=minioadmin123
-
-# S3 API configuration for your apps
-S3_ENDPOINT=http://localhost:9000
-S3_ACCESS_KEY_ID=minioadmin
-S3_SECRET_ACCESS_KEY=minioadmin123
-S3_REGION=us-east-1
-S3_BUCKET_NAME=demo-bucket
-```
-
 ## Using with Python (boto3)
 
 ```python
@@ -85,16 +68,16 @@ for obj in response.get('Contents', []):
 
 ## Available Commands
 
-| Command | Description |
-|---------|-------------|
-| `make help` | Show available commands |
-| `make up` | Start MinIO containers |
-| `make down` | Stop MinIO containers |
-| `make downall` | Stop containers and remove volumes |
-| `make destroy` | Remove all Docker artifacts |
-| `make logs` | Watch container logs |
-| `make status` | Show container and volume status |
-| `make clean` | Remove data volumes (containers must be stopped) |
+| Command        | Description                                      |
+| -------------- | ------------------------------------------------ |
+| `make help`    | Show available commands                          |
+| `make up`      | Start MinIO containers                           |
+| `make down`    | Stop MinIO containers                            |
+| `make downall` | Stop containers and remove volumes               |
+| `make destroy` | Remove all Docker artifacts                      |
+| `make logs`    | Watch container logs                             |
+| `make status`  | Show container and volume status                 |
+| `make clean`   | Remove data volumes (containers must be stopped) |
 
 ## Data Persistence
 
@@ -110,6 +93,7 @@ for obj in response.get('Contents', []):
 ## Troubleshooting
 
 ### Container Won't Start
+
 ```bash
 # Check if ports are already in use
 lsof -i :9000
@@ -120,6 +104,7 @@ make logs
 ```
 
 ### Reset Everything
+
 ```bash
 # Complete reset (removes all data!)
 make destroy
@@ -127,7 +112,9 @@ make up
 ```
 
 ### Custom Configuration
+
 Edit `.env` file and restart containers:
+
 ```bash
 make down
 # Edit .env file
