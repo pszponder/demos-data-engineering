@@ -1,4 +1,4 @@
-.PHONY: help init up down downall destroy logs status user-create user-delete user-list
+.PHONY: help build init up down downall destroy logs status user-create user-delete user-list rebuild setup
 
 # Default target - show help when just typing 'make'
 default: help
@@ -7,7 +7,45 @@ default: help
 help: ## Show this help message
 	@echo "Airflow Management"
 	@echo "Available commands:"
-	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "  %-12s %s\n", $$1, $$2}'
+	@echo ""
+	@echo "🔧 Build & Setup:"
+	@grep -E '^(setup|build|rebuild|init):.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "  %-12s %s\n", $$1, $$2}'
+	@echo ""
+	@echo "🚀 Service Management:"
+	@grep -E '^(up|down|downall|destroy):.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "  %-12s %s\n", $$1, $$2}'
+	@echo ""
+	@echo "📊 Monitoring:"
+	@grep -E '^(logs|status):.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "  %-12s %s\n", $$1, $$2}'
+	@echo ""
+	@echo "👥 User Management:"
+	@grep -E '^user-.*:.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "  %-12s %s\n", $$1, $$2}'
+	@echo ""
+
+# Complete setup: build, init, and start Airflow
+setup: build init ## Complete setup: build image, initialize database, and start services
+	@echo ""
+	@echo "🎉 Airflow setup complete!"
+	@echo "📊 Web UI: http://localhost:8080 (admin/airflow)"
+	@echo "🌸 Flower: http://localhost:5555"
+	@echo ""
+	@echo "Starting services..."
+	@$(MAKE) up
+
+# Build custom Airflow Docker image with dependencies from pyproject.toml
+build: ## Build custom Airflow image with uv and pyproject.toml dependencies
+	@echo "🔨 Building custom Airflow image with uv and dependencies..."
+	@echo "📦 Installing packages from pyproject.toml using uv..."
+	docker compose build
+	@echo "✅ Custom Airflow image built successfully!"
+	@echo "💡 Run 'make init' to initialize the database, then 'make up' to start services"
+
+# Rebuild image from scratch (no cache)
+rebuild: ## Rebuild custom Airflow image from scratch (no cache)
+	@echo "🔨 Rebuilding custom Airflow image from scratch..."
+	@echo "🗑️  Removing existing images and clearing build cache..."
+	docker compose build --no-cache
+	@echo "✅ Custom Airflow image rebuilt successfully!"
+	@echo "💡 Run 'make init' to initialize the database, then 'make up' to start services"
 
 # Initialize Airflow database and create admin user
 init: ## Initialize Airflow database and create admin user
