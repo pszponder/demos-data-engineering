@@ -1,4 +1,4 @@
-.PHONY: help build init up down downall destroy logs status user-create user-delete user-list rebuild setup
+.PHONY: help build init up down downall destroy logs status user-create user-delete user-list rebuild setup restart clean
 
 # Default target - show help when just typing 'make'
 default: help
@@ -9,10 +9,10 @@ help: ## Show this help message
 	@echo "Available commands:"
 	@echo ""
 	@echo "🔧 Build & Setup:"
-	@grep -E '^(lint|fmt|setup|build|rebuild|init):.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "  %-12s %s\n", $$1, $$2}'
+	@grep -E '^(lint|fmt|setup|build|rebuild|init|clean):.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "  %-12s %s\n", $$1, $$2}'
 	@echo ""
 	@echo "🚀 Service Management:"
-	@grep -E '^(up|down|downall|destroy):.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "  %-12s %s\n", $$1, $$2}'
+	@grep -E '^(up|down|downall|destroy|restart):.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "  %-12s %s\n", $$1, $$2}'
 	@echo ""
 	@echo "📊 Monitoring:"
 	@grep -E '^(logs|status):.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "  %-12s %s\n", $$1, $$2}'
@@ -28,6 +28,22 @@ lint: ## Run linting with ruff (applies fixes when available)
 # Format code with ruff
 fmt: ## Format code with ruff
 	uv run ruff format .
+
+# Clean up project
+clean: ## Clean up generated files (__pycache__, .ruff_cache, etc.)
+	@echo "🧹 Cleaning up generated files..."
+	@find . -type d -name "__pycache__" -exec rm -rf {} + 2>/dev/null || true
+	@find . -type f -name "*.pyc" -delete 2>/dev/null || true
+	@find . -type f -name "*.pyo" -delete 2>/dev/null || true
+	@find . -type f -name "*.pyd" -delete 2>/dev/null || true
+	@find . -type f -name ".coverage" -delete 2>/dev/null || true
+	@find . -type d -name "*.egg-info" -exec rm -rf {} + 2>/dev/null || true
+	@find . -type d -name ".pytest_cache" -exec rm -rf {} + 2>/dev/null || true
+	@find . -type d -name ".ruff_cache" -exec rm -rf {} + 2>/dev/null || true
+	@find . -type d -name ".mypy_cache" -exec rm -rf {} + 2>/dev/null || true
+	@find . -type d -name "htmlcov" -exec rm -rf {} + 2>/dev/null || true
+	@find . -type f -name ".DS_Store" -delete 2>/dev/null || true
+	@echo "✅ Cleanup complete!"
 
 # Complete setup: build, init, and start Airflow
 setup: build init ## Complete setup: build image, initialize database, and start services
@@ -68,6 +84,14 @@ up: ## Start Airflow services including Flower monitoring
 	@echo ""
 	@echo "💡 Use 'make logs' to watch Airflow logs"
 	@echo "💡 Use 'make status' to check container status"
+
+# Restart Airflow services (preserves volumes and picks up .env changes)
+restart: ## Restart Airflow services (preserves volumes and picks up .env changes)
+	@echo "🔄 Restarting Airflow services to pick up configuration changes..."
+	docker compose --profile flower restart
+	@echo "✅ Airflow services restarted!"
+	@echo "📊 Airflow Web UI: http://localhost:8080"
+	@echo "🌸 Flower monitoring: http://localhost:5555"
 
 # Stop all Airflow services
 down: ## Stop all Airflow services
