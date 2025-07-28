@@ -9,7 +9,7 @@ help: ## Show this help message
 	@echo "Available commands:"
 	@echo ""
 	@echo "🔧 Build & Setup:"
-	@grep -E '^(setup|build|rebuild|init):.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "  %-12s %s\n", $$1, $$2}'
+	@grep -E '^(lint|fmt|setup|build|rebuild|init):.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "  %-12s %s\n", $$1, $$2}'
 	@echo ""
 	@echo "🚀 Service Management:"
 	@grep -E '^(up|down|downall|destroy):.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "  %-12s %s\n", $$1, $$2}'
@@ -20,6 +20,14 @@ help: ## Show this help message
 	@echo "👥 User Management:"
 	@grep -E '^user-.*:.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "  %-12s %s\n", $$1, $$2}'
 	@echo ""
+
+# Run linting with ruff (applies fixes when available)
+lint: ## Run linting with ruff (applies fixes when available)
+	uv run ruff check --fix .
+
+# Format code with ruff
+fmt: ## Format code with ruff
+	uv run ruff format .
 
 # Complete setup: build, init, and start Airflow
 setup: build init ## Complete setup: build image, initialize database, and start services
