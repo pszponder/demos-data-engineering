@@ -346,5 +346,5 @@ volumes:
 
 networks:
   default:
-    name: minio-network
+    name: shared-network
     external: true

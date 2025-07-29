@@ -16,7 +16,7 @@ services:
             - ./data:/opt/bitnami/spark/data
             - ./apps:/opt/bitnami/spark/apps
         networks:
-            - spark-network
+            - default
         # Uncomment if you need host networking for external connections
         # extra_hosts:
         #   - "host.docker.internal:${HOST_IP}"
@@ -42,11 +42,12 @@ services:
         depends_on:
             - spark-master
         networks:
-            - spark-network
+            - default
         # Uncomment if you need host networking for external connections
         # extra_hosts:
         #   - "host.docker.internal:${HOST_IP}"
 
 networks:
-    spark-network:
-        driver: bridge
+  default:
+    name: shared-network
+    external: true
