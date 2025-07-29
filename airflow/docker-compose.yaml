@@ -343,3 +343,8 @@ services:
 
 volumes:
     postgres-db-volume:
+
+networks:
+  default:
+    name: minio-network
+    external: true
